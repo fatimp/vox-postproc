@@ -33,3 +33,9 @@
   :components ((:file "package")
                (:file "tests" :depends-on ("package")))
   :depends-on (:vox-postproc :fiveam))
+
+#+sb-core-compression
+(defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
+  (uiop:dump-image (asdf:output-file o c)
+                   :executable t
+                   :compression -1))
