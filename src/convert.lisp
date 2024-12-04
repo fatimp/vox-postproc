@@ -73,6 +73,7 @@
          (output    (%assoc :output  arguments))
          (*verbose* (%assoc :verbose arguments)))
     (write-output
-     (fix-array
-      (load-array input))
+     (binary-media-gen:only-one-cluster
+      (fix-array
+       (load-array input)))
      output)))
