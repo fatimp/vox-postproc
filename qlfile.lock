@@ -1,0 +1,28 @@
+("quicklisp" .
+ (:class qlot/source/dist:source-dist
+  :initargs (:distribution "https://beta.quicklisp.org/dist/quicklisp.txt" :%version :latest)
+  :version "2024-10-12"))
+("binary-media-gen" .
+ (:class qlot/source/github:source-github
+  :initargs (:repos "fatimp/binary-media-gen" :ref nil :branch nil :tag nil)
+  :version "github-866e0089939e074ee2310b18d67b1dfe84a05be1"))
+("shamazmazum-command-line-parse" .
+ (:class qlot/source/ultralisp:source-ultralisp
+  :initargs (:%version :latest)
+  :version "ultralisp-20241204090500"))
+("shamazmazum-numpy-npy" .
+ (:class qlot/source/ultralisp:source-ultralisp
+  :initargs (:%version :latest)
+  :version "ultralisp-20241204072500"))
+("shamazmazum-stateless-iterators" .
+ (:class qlot/source/ultralisp:source-ultralisp
+  :initargs (:%version :latest)
+  :version "ultralisp-20241204073000"))
+("shamazmazum-cl-value-noise" .
+ (:class qlot/source/ultralisp:source-ultralisp
+  :initargs (:%version :latest)
+  :version "ultralisp-20241204073000"))
+("fiveam" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2024-10-12"))
