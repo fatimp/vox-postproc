@@ -4,3 +4,4 @@ ultralisp shamazmazum-numpy-npy
 ultralisp shamazmazum-stateless-iterators
 ultralisp shamazmazum-cl-value-noise
 ql fiveam
+ql select

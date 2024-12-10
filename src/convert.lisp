@@ -21,24 +21,6 @@
               :element-type (array-element-type data)
               :displaced-to data))
 
-(defparameter *cmd-line*
-  (seq
-   (optional
-    (flag :verbose :short #\v :long "verbose" :description "Be verbose"))
-   (argument :input  "INPUT"  :description "Input file (in numpy array format)")
-   (argument :output "OUTPUT" :description "Output file (can be .raw or .npy)"
-             :fn #'check-output-type)))
-
-(defun handle-arguments ()
-  (handler-case
-      (parse-argv *cmd-line*)
-    (cmd-line-parse-error ()
-      (print-usage *cmd-line*)
-      (uiop:quit 1))
-    (wrong-output-type (c)
-      (princ c *error-output*)
-      (uiop:quit 1))))
-
 (sera:-> fix-array ((simple-array (unsigned-byte 8) (*)))
          (values (simple-array bit (* * *)) &optional))
 (defun fix-array (data)
@@ -67,13 +49,55 @@
          (write-sequence (flatten data) output)))))
   (values))
 
+(sera:-> add-padding ((simple-array bit (* * *)) (integer 1))
+         (values (simple-array bit (* * *)) &optional))
+(defun add-padding (array padding)
+  (let* ((side  (array-dimension array 0))
+         (range (select:range padding (+ padding side)))
+         (new-side (+ side (* padding 2)))
+         (result (make-array (list new-side new-side new-side)
+                             :element-type 'bit
+                             :initial-element 0)))
+    (when *verbose*
+      (format *standard-output* "Cube side with padding = ~d~%" new-side))
+    (setf (select:select result range range range) array)
+    result))
+
+(defparameter *cmd-line*
+  (seq
+   (optional
+    (flag   :verbose
+            :short       #\v
+            :long        "verbose"
+            :description "Be verbose")
+    (option :padding "N"
+            :short       #\p
+            :long        "padding"
+            :fn          #'parse-integer
+            :description "Pad by N zero voxels from each side"))
+   (argument :input  "INPUT"  :description "Input file (in numpy array format)")
+   (argument :output "OUTPUT" :description "Output file (can be .raw or .npy)"
+             :fn #'check-output-type)))
+
+(defun handle-arguments ()
+  (handler-case
+      (parse-argv *cmd-line*)
+    (cmd-line-parse-error ()
+      (print-usage *cmd-line*)
+      (uiop:quit 1))
+    (wrong-output-type (c)
+      (princ c *error-output*)
+      (uiop:quit 1))))
+
 (defun main ()
   (let* ((arguments (handle-arguments))
          (input     (%assoc :input   arguments))
          (output    (%assoc :output  arguments))
-         (*verbose* (%assoc :verbose arguments)))
+         (padding   (%assoc :padding arguments))
+         (*verbose* (%assoc :verbose arguments))
+         (array (binary-media-gen:only-one-cluster
+                 (fix-array
+                  (load-array input)))))
     (write-output
-     (binary-media-gen:only-one-cluster
-      (fix-array
-       (load-array input)))
+     (if padding (add-padding array padding) array)
      output)))

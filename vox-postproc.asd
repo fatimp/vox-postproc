@@ -12,7 +12,8 @@
   :depends-on (:command-line-parse
                :serapeum
                :numpy-npy
-               :binary-media-gen)
+               :binary-media-gen
+               :select)
   :build-operation program-op
   :build-pathname "vox-postproc"
   :entry-point "vox-postproc:main"
