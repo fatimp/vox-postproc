@@ -33,6 +33,13 @@
     (map-into (flatten array) #'identity data)
     array))
 
+(sera:-> maybe-fix-array (simple-array)
+         (values (simple-array bit (* * *)) &optional))
+(defun maybe-fix-array (array)
+  (if (and (eq (array-element-type array) 'bit)
+           (= (array-rank array) 3))
+      array (fix-array array)))
+
 (sera:-> write-output ((simple-array bit (* * *)) (or string pathname))
          (values &optional))
 (defun write-output (data filename)
@@ -96,7 +103,7 @@
          (padding   (%assoc :padding arguments))
          (*verbose* (%assoc :verbose arguments))
          (array (binary-media-gen:only-one-cluster
-                 (fix-array
+                 (maybe-fix-array
                   (load-array input)))))
     (write-output
      (if padding (add-padding array padding) array)
