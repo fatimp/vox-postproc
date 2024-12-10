@@ -35,7 +35,7 @@
     (cmd-line-parse-error ()
       (print-usage *cmd-line*)
       (uiop:quit 1))
-    (wrong-type (c)
+    (wrong-output-type (c)
       (princ c *error-output*)
       (uiop:quit 1))))
 
