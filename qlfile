@@ -1,7 +1,7 @@
 github fatimp/binary-media-gen
 ultralisp shamazmazum-command-line-parse
-ultralisp shamazmazum-numpy-npy
 ultralisp shamazmazum-stateless-iterators
 ultralisp shamazmazum-cl-value-noise
 ql fiveam
 ql select
+http numpy-npy https://github.com/shamazmazum/numpy-npy/archive/refs/tags/v0.2.tar.gz
